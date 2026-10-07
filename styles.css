@@ -1220,8 +1220,9 @@ a:hover {
 .hero .wrap { position: relative; }
 .mascot { display: none; }
 @media (min-width: 1100px) {
-  .mascot { display: block; position: absolute; z-index: 3; right: -70px; top: 470px; width: 170px; pointer-events: none; }
-  .mascot .ekam { width: 100%; height: auto; filter: drop-shadow(0 18px 24px rgb(18 17 31 / .25)); }
+  .mascot { display: block; position: absolute; z-index: 3; right: -70px; top: 470px; width: 170px; aspect-ratio: 234 / 339; pointer-events: none; }
+  .mascot .ekam { filter: drop-shadow(0 18px 24px rgb(18 17 31 / .25)); }
+  .mascot.waiting .bubble { opacity: 0; }
   .mascot .bubble { position: absolute; right: 30px; bottom: calc(100% + 10px); width: 220px; margin: 0; padding: 12px 14px; background: #fff; color: #12111f; border-radius: 16px; box-shadow: 0 10px 30px -12px rgb(18 17 31 / .35); font-size: .9375rem; line-height: 1.35; text-align: left; transition: opacity 260ms ease; }
   .mascot .bubble::after { content: ""; position: absolute; right: 56px; top: 100%; border: 8px solid transparent; border-top-color: #fff; border-bottom: 0; }
   .mascot .bubble.fade { opacity: 0; }
@@ -1231,3 +1232,35 @@ a:hover {
 .meet-art { width: 100%; max-width: 420px; height: auto; margin: 0 auto; border-radius: 22px; box-shadow: 0 24px 60px -24px rgb(18 17 31 / .45); }
 .meet-text .hi { margin: 8px 0 0; opacity: .8; }
 .meet-text p { max-width: 46ch; }
+
+/* Ekam in motion. His clips are whole 328 x 440 frames so they line up: the figure, shield and all, fills
+   x 32-266, y 88-427 of the frame. Each holder is the size of the figure and the frame spills past it, so he can
+   fly in and out of view. */
+.mascot .ekam, .guard .fig .ekam, .mini-ekam .ekam { position: absolute; max-width: none; width: 140.2%; height: auto; left: -13.7%; top: -26%; }
+.ekam.away { visibility: hidden; }
+.ekam.dropin { animation: ekam-drop 520ms cubic-bezier(.5, 0, .9, .4) both; }
+.ekam.launch { animation: ekam-launch 1500ms cubic-bezier(.6, 0, 1, .6) 1450ms both; }
+@keyframes ekam-drop { from { transform: translateY(-70vh); } to { transform: none; } }
+@keyframes ekam-launch { from { transform: none; } to { transform: translateY(-130vh); } }
+
+/* Header: a small Ekam stands in the bar, landing there as the page opens; tapping him flies you back to the top. */
+.mini-ekam { display: block; position: relative; flex: none; width: 34px; aspect-ratio: 234 / 339; }
+.mini-ekam .ekam { filter: drop-shadow(0 4px 6px rgb(18 17 31 / .25)); }
+.mini-ekam .ekam.dropin { animation-name: ekam-drop-mini; }
+@keyframes ekam-drop-mini { from { transform: translateY(-160px); } to { transform: none; } }
+
+/* The company link: Ekam flies you there. */
+.nav-cta .company.flying { color: var(--ink); background: var(--glass-edge); }
+
+/* Footer: Ekam on guard, with the way back up. */
+.guard { display: flex; align-items: flex-end; gap: 40px; margin: 0 0 44px; padding-bottom: 28px; border-bottom: 1px solid var(--line); }
+.guard .fig { position: relative; flex: none; width: 116px; margin-left: 8px; aspect-ratio: 234 / 339; }
+.guard .fig .ekam { filter: drop-shadow(0 12px 16px rgb(18 17 31 / .2)); }
+.guard .say { padding-bottom: 6px; }
+.guard .say p { margin: 0 0 12px; color: var(--ink-2); }
+.guard .say .kicker { margin: 0 0 6px; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--brand-ink); }
+.guard .fly { display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: var(--pill); background: linear-gradient(100deg, var(--brand-from), var(--brand-to)); color: #fff; font-weight: 600; text-decoration: none; transition: transform 160ms ease; }
+.guard .fly:active { transform: scale(.97); }
+@media (prefers-reduced-motion: reduce) { .ekam.dropin, .ekam.launch { animation: none; } }
+@media (max-width: 900px) { .mini-ekam { margin-left: auto; } .nav-cta { margin-left: 0; } }
+@media (max-width: 560px) { .guard { gap: 24px; } .guard .fig { width: 96px; } }
