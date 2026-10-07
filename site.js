@@ -187,6 +187,44 @@
     });
   });
 
+  // The "Meet" picture becomes its looping scene once it comes near the screen; it loads only then, and stays a
+  // still picture for reduced motion.
+  function meetScene() {
+    var art = document.querySelector('.meet-art[data-video]');
+    if (!art || !('IntersectionObserver' in window)) return;
+    var near = new IntersectionObserver(function (es) {
+      if (!es[0].isIntersecting) return;
+      near.disconnect();
+      var v = document.createElement('video');
+      v.muted = true; v.loop = true; v.playsInline = true;
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('preload', 'auto');
+      v.poster = art.currentSrc || art.src;
+      v.width = art.width; v.height = art.height;
+      v.setAttribute('role', 'img'); v.setAttribute('aria-label', art.alt);
+      art.getAttribute('data-video').split(',').forEach(function (src) {
+        var s = document.createElement('source');
+        s.src = src; s.type = /\.webm$/.test(src) ? 'video/webm' : 'video/mp4';
+        v.appendChild(s);
+      });
+      var shown = false;
+      v.addEventListener('canplaythrough', function () {
+        if (shown) return;
+        shown = true;
+        // Take the picture's place as it is now, already revealed: the scroll-in reveal watched the picture.
+        v.className = art.className;
+        v.classList.remove('pre');
+        v.classList.add('in');
+        art.replaceWith(v);
+        var p = v.play(); if (p && p.catch) p.catch(function () {});
+      });
+      v.load();
+    }, { threshold: 0.2 });
+    near.observe(art);
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) meetScene();
+  });
+
   // Ekam's speech bubble: one true line at a time (held still for reduced motion).
   document.addEventListener('DOMContentLoaded', function () {
     var mascot = document.querySelector('.mascot');
