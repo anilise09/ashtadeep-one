@@ -46,4 +46,16 @@
       }
     });
   });
+  // Ekam's speech bubble: one true line at a time (held still for reduced motion).
+  document.addEventListener('DOMContentLoaded', function () {
+    var mascot = document.querySelector('.mascot');
+    if (!mascot || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var lines = JSON.parse(mascot.getAttribute('data-lines') || '[]');
+    var bubble = mascot.querySelector('.bubble');
+    var at = 0;
+    if (lines.length > 1) setInterval(function () {
+      bubble.classList.add('fade');
+      setTimeout(function () { at = (at + 1) % lines.length; bubble.textContent = lines[at]; bubble.classList.remove('fade'); }, 280);
+    }, 4800);
+  });
 })();
