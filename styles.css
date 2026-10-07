@@ -1216,16 +1216,29 @@ a:hover {
   }
 }
 
-/* Ekam, the mascot: beside the hero's words on wide screens, with a speech bubble; and his own section. */
-.hero .wrap { position: relative; }
-.mascot { display: none; }
+/* Ekam, the mascot, on every page and every screen (owner, 2026-10-07), as Vyom is on the company site. On phones
+   and tablets he stands at the foot of the hero, on its right, his speech bubble beside him, and the hero leaves room
+   for him; on wide screens he stands beside the hero's words, his bubble above him. --ekam-w is his figure's width. */
+.hero .wrap { position: relative; --ekam-w: 66px; }
+@media (min-width: 600px) { .hero .wrap { --ekam-w: 84px; } }
+@media (min-width: 900px) { .hero .wrap { --ekam-w: 100px; } }
+.hero .wrap.has-ekam { padding-bottom: calc(var(--ekam-w) * 339 / 234 + 6px); }
+.mascot { display: block; position: absolute; z-index: 3; right: var(--gutter); bottom: 0; width: var(--ekam-w); aspect-ratio: 234 / 339; pointer-events: none; }
+.mascot .ekam { filter: drop-shadow(0 14px 18px rgb(18 17 31 / .25)); }
+.mascot.waiting .bubble { opacity: 0; }
+.mascot .bubble { position: absolute; right: calc(100% + 10px); bottom: 42%; width: max-content; max-width: min(230px, 56vw); margin: 0; padding: 10px 13px; background: #fff; color: #12111f; border-radius: 16px; box-shadow: 0 10px 30px -12px rgb(18 17 31 / .35); font-size: .875rem; line-height: 1.35; font-weight: 500; text-align: left; transition: opacity 260ms ease; }
+.mascot .bubble::after { content: ""; position: absolute; left: 100%; top: 50%; margin-top: -8px; border: 8px solid transparent; border-left-color: #fff; border-right: 0; }
+.mascot .bubble.fade { opacity: 0; }
 @media (min-width: 1100px) {
-  .mascot { display: block; position: absolute; z-index: 3; right: -70px; top: 470px; width: 170px; aspect-ratio: 234 / 339; pointer-events: none; }
+  .hero:not(.small) .wrap.has-ekam { padding-bottom: 0; }
+  .hero.small .wrap.has-ekam { --ekam-w: 112px; }
+  .mascot { right: -70px; bottom: auto; top: 470px; width: 170px; }
+  .hero.small .mascot { right: var(--gutter); top: auto; bottom: 0; width: var(--ekam-w); }
   .mascot .ekam { filter: drop-shadow(0 18px 24px rgb(18 17 31 / .25)); }
-  .mascot.waiting .bubble { opacity: 0; }
-  .mascot .bubble { position: absolute; right: 30px; bottom: calc(100% + 10px); width: 220px; margin: 0; padding: 12px 14px; background: #fff; color: #12111f; border-radius: 16px; box-shadow: 0 10px 30px -12px rgb(18 17 31 / .35); font-size: .9375rem; line-height: 1.35; text-align: left; transition: opacity 260ms ease; }
-  .mascot .bubble::after { content: ""; position: absolute; right: 56px; top: 100%; border: 8px solid transparent; border-top-color: #fff; border-bottom: 0; }
-  .mascot .bubble.fade { opacity: 0; }
+  .mascot .bubble { right: 30px; bottom: calc(100% + 10px); width: 220px; max-width: none; padding: 12px 14px; font-size: .9375rem; }
+  .mascot .bubble::after { left: auto; right: 56px; top: 100%; margin-top: 0; border: 8px solid transparent; border-top-color: #fff; border-bottom: 0; }
+  .hero.small .mascot .bubble { left: auto; right: calc(100% + 10px); bottom: 46%; width: 210px; }
+  .hero.small .mascot .bubble::after { right: auto; left: 100%; top: 50%; margin-top: -8px; border: 8px solid transparent; border-left-color: #fff; border-right: 0; }
 }
 .meet-inner { display: grid; gap: 32px; align-items: center; }
 @media (min-width: 860px) { .meet-inner { grid-template-columns: .85fr 1fr; gap: 56px; } }
